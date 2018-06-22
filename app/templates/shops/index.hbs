@@ -1,0 +1,53 @@
+<table class="w-50 table table-bordered">
+  <thead>
+    <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Edit Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each model as |shop|}}
+    <tr>
+      <td>{{#link-to 'shops.show' shop.id}} {{shop.name}} {{/link-to}}</td>
+      <td class="w-50">
+        {{#if show}}
+        <a href="" >d</a>
+        {{/if}}
+        <button 
+            {{action "editShop" shop}} 
+            data-toggle="modal" 
+            data-target="#shopModal" 
+            class="btn btn-success">EDIT
+        </button>
+        <button 
+            {{action 'getShopId' shop.id}}
+            data-toggle="modal" 
+            data-target="#alertModal"
+            class="btn btn-danger">DELETE
+        </button>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<button
+    data-toggle="modal" 
+    data-target="#shopModal"
+    {{action 'modalShow'}}
+    class="btn btn-dark">
+        Add shops
+</button>
+
+{{
+    add-edit-modal 
+    saveShop=(action 'saveShop')
+    shopName=shopName
+    id=id
+}}
+
+{{
+    alert-modal 
+    remove=(action 'remove')
+    id=id
+}}

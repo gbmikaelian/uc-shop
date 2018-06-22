@@ -1,0 +1,108 @@
+<h1>{{model.name}} </h1>
+{{#if validInputs}}    
+<div class="alert alert-danger" role="alert">
+    You need select a number!!!
+</div>
+{{/if}}
+
+<table class="w-50 table table-bordered">
+  <thead>
+    <tr>
+        <th scope="col">NAME</th>
+        <th scope="col">QTY</th>
+        <th scope="col">PRICE</th>
+        <th scope="col">Edit Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+   {{#each model.products as |product|}}
+    <tr>
+    <td>{{product.name}}</td>
+    <td>{{product.quantity}}</td>
+    <td>&#36; {{product.price}}</td>
+      <td class="w-10">
+        {{product.idA}}
+        <button 
+            {{action 'edit' product}}
+            {{action (mut modal3) true}}
+            class='btn btn-success'>
+            {{fa-icon 'pencil'}}
+        </button>
+        <button 
+            {{action 'getProductId' product.id}}
+            {{action (mut deleteModal) true}}
+            data-toggle="modal" 
+            data-target="#alertModal"
+            class="btn btn-danger">{{fa-icon 'trash'}}
+        </button>
+      </td>
+    </tr>
+    {{/each}}
+    <tr>
+        <td colspan="3" class="text-right">
+          <div>Total price</div>
+          <div>&#36; {{model.totalPrice}}</div>
+        </td>
+        <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<button class="btn btn-success"
+        class="btn btn-dark"
+    {{action 'deleteData'}}
+    {{action (mut modal3) true}}>Add product
+</button>
+
+{{#bs-modal open=modal3 onSubmit=(action "submit") onHidden=(action (mut modal3) false) as |modal|}}
+  {{#modal.header}}
+    <h4 class="modal-title">
+      Add produt
+    </h4>
+  {{/modal.header}}
+  {{#modal.body}}
+    
+    <label>Name
+    {{  input value=name
+        class="form-control"
+    }}
+    </label>
+    <label> Quantity
+    {{  input value=quantity
+        class="form-control"
+    }}
+    </label>
+    <label>Price
+    {{  input value=price
+        class="form-control"
+    }}
+    </label>
+  {{/modal.body}}
+  {{#modal.footer}}
+    {{#bs-button onClick=(action modal.close)}}Cancel{{/bs-button}}
+    <button 
+        class="btn btn-success"
+        {{action modal.submit}}
+        {{action modal.close}}>save
+    </button>
+
+  {{/modal.footer}}
+{{/bs-modal}}
+
+{{!-- Delete modal --}}
+
+{{#bs-modal open=deleteModal onSubmit=(action "remove") onHidden=(action (mut deleteModal) false) as |modal|}}
+  {{#modal.header}}
+    <h4 class="modal-title">
+       Do you really want to delete this product?
+    </h4>
+  {{/modal.header}}
+  {{#modal.footer}}
+    {{#bs-button onClick=(action modal.close)}}Cancel{{/bs-button}}
+    <button class="btn btn-danger"
+        {{action 'remove'}}
+        {{action modal.close}}>Delete
+    </button>
+
+  {{/modal.footer}}
+{{/bs-modal}}
