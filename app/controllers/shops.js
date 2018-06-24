@@ -3,27 +3,35 @@ import Controller from '@ember/controller';
 export default Controller.extend({
     shopName: '',
     id: '',
+    destroyInputData () {
+        this.set('shopName', '');
+        this.set('id', '');        
+    },
+
     actions: {
-        editShop (param) {
-            this.set('shopName', param.name)
-            this.set('id', param.id)
+        edit (shop) {
+            this.set('shopName', shop.name)
+            this.set('id', shop.id)
         },
 
         modalShow () {
-            this.set('shopName', '')
-            this.set('id', '')
+            this.destroyInputData();
         },
 
-        async remove (id) {
-            const shop = await this.get('store').findRecord('shop', id, {reload: true});
+        async remove () {
+            const shop = await this.get('store').findRecord('shop', this.get('id'), {reload: true});
             shop.destroyRecord();
+            this.destroyInputData();
         },
 
         getShopId (id) {
             this.set('id', id)
         },
 
-        async saveShop ({shopName, id}) {
+        async submit () {
+            const shopName = this.get('shopName'),
+            id = this.get('id');
+            
             if (id) {
                 const shop = await this.get('store').findRecord('shop', id);
                 shop.set('name', shopName);
@@ -35,7 +43,7 @@ export default Controller.extend({
                 });
                 shop.save();
             }
-            this.set('id', '')
+            this.destroyInputData();
         }
     }
 });

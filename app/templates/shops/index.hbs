@@ -14,15 +14,14 @@
         <a href="" >d</a>
         {{/if}}
         <button 
-            {{action "editShop" shop}} 
-            data-toggle="modal" 
-            data-target="#shopModal" 
+            {{action "edit" shop}} 
+            {{action (mut shopModal) true}}
             class="btn btn-success">EDIT
         </button>
+
         <button 
             {{action 'getShopId' shop.id}}
-            data-toggle="modal" 
-            data-target="#alertModal"
+            {{action (mut deleteModal) true}}
             class="btn btn-danger">DELETE
         </button>
       </td>
@@ -31,23 +30,55 @@
   </tbody>
 </table>
 
+{{#bs-modal open=shopModal onSubmit=(action "submit") onHidden=(action (mut shopModal) false) as |modal|}}
+  {{#modal.header}}
+    <h4 class="modal-title">
+        Shop
+    </h4>
+  {{/modal.header}}
+  {{#modal.body}}
+    
+    <label> Name
+    {{  input value=shopName
+        class="form-control"
+    }}
+    </label>
+    
+  {{/modal.body}}
+  {{#modal.footer}}
+    
+    {{#bs-button 
+        onClick=(action modal.close)}}Cancel
+    {{/bs-button}}
+
+     <button 
+        class="btn btn-success"
+        {{action modal.submit}}
+        {{action modal.close}}>save
+    </button>
+    
+  {{/modal.footer}}
+{{/bs-modal}}
+
 <button
-    data-toggle="modal" 
-    data-target="#shopModal"
+    {{action (mut shopModal) true}}
     {{action 'modalShow'}}
-    class="btn btn-dark">
-        Add shops
+    class="btn btn-dark"> Add shops
 </button>
 
-{{
-    add-edit-modal 
-    saveShop=(action 'saveShop')
-    shopName=shopName
-    id=id
-}}
+{{#bs-modal open=deleteModal onSubmit=(action "remove") onHidden=(action (mut deleteModal) false) as |modal|}}
+  {{#modal.header}}
+    <h4 class="modal-title">
+       Do you really want to delete this shop?
+    </h4>
+  {{/modal.header}}
+  {{#modal.footer}}
+    {{#bs-button onClick=(action modal.close)}}Cancel{{/bs-button}}
+    <button class="btn btn-danger"
+        {{action 'remove'}}
+        {{action modal.close}}>Delete
+    </button>
 
-{{
-    alert-modal 
-    remove=(action 'remove')
-    id=id
-}}
+  {{/modal.footer}}
+{{/bs-modal}}
+

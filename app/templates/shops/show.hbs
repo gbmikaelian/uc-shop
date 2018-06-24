@@ -1,4 +1,4 @@
-<h1>{{model.name}} </h1>
+<h6>{{#link-to 'shops'}} SHOPS {{/link-to}} / {{model.name}} </h6>
 {{#if validInputs}}    
 <div class="alert alert-danger" role="alert">
     You need select a number!!!
@@ -21,10 +21,9 @@
     <td>{{product.quantity}}</td>
     <td>&#36; {{product.price}}</td>
       <td class="w-10">
-        {{product.idA}}
         <button 
             {{action 'edit' product}}
-            {{action (mut modal3) true}}
+            {{action (mut productsModal) true}}
             class='btn btn-success'>
             {{fa-icon 'pencil'}}
         </button>
@@ -41,7 +40,7 @@
     <tr>
         <td colspan="3" class="text-right">
           <div>Total price</div>
-          <div>&#36; {{model.totalPrice}}</div>
+          <div>&#36; {{totalPrice}}</div>
         </td>
         <td></td>
     </tr>
@@ -51,10 +50,10 @@
 <button class="btn btn-success"
         class="btn btn-dark"
     {{action 'deleteData'}}
-    {{action (mut modal3) true}}>Add product
+    {{action (mut productsModal) true}}>Add product
 </button>
 
-{{#bs-modal open=modal3 onSubmit=(action "submit") onHidden=(action (mut modal3) false) as |modal|}}
+{{#bs-modal open=productsModal onSubmit=(action "submit") onHidden=(action (mut productsModal) false) as |modal|}}
   {{#modal.header}}
     <h4 class="modal-title">
       Add produt
@@ -62,18 +61,26 @@
   {{/modal.header}}
   {{#modal.body}}
     
-    <label>Name
+    <label> Name
     {{  input value=name
         class="form-control"
     }}
     </label>
+    
     <label> Quantity
-    {{  input value=quantity
+    {{  
+        input value=quantity
+        min=1
+        type='number'
         class="form-control"
     }}
     </label>
+
     <label>Price
-    {{  input value=price
+    {{  
+        input value=price
+        min=1
+        type='number'
         class="form-control"
     }}
     </label>
